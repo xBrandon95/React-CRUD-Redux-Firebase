@@ -17,6 +17,7 @@ body {
     color: white!important;
     text-decoration: none!important;
   }
+
   .nuevo-post{
     font-weight: bold;
     text-transform: uppercase;
@@ -48,4 +49,8 @@ body {
   }
   .acciones > *{
     flex: 1;
+  }
+
+  input {
+    color: black !important;
   }
