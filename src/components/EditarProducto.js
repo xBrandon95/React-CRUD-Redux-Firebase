@@ -1,6 +1,10 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "../hooks/useForm";
+import {
+  mostrarAlertaAction,
+  ocultarAlertaAction,
+} from "../redux/actions/alertaActions";
 import { editarProductoAction } from "../redux/actions/productoActions";
 
 export const EditarProducto = ({ history }) => {
@@ -21,14 +25,24 @@ export const EditarProducto = ({ history }) => {
 
   const { nombre, precio } = producto;
 
+  const { alerta } = useSelector((state) => state.alerta);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     let nPrecio = Number(precio);
     // validar formulario
-    if (nombre.trim() === "" || nPrecio <= 0) {
+    if (nombre.trim() === "" || nPrecio <= 0 || nPrecio === "") {
+      const alerta = {
+        msg: "Ambos campos son obligatorios",
+        clases: "alert alert-danger text-center text-uppercase p3",
+      };
+      dispatch(mostrarAlertaAction(alerta));
       return;
     }
+
+    // si no hay errores
+    dispatch(ocultarAlertaAction());
 
     // editar el producto
     await dispatch(editarProductoAction(producto));
@@ -45,6 +59,8 @@ export const EditarProducto = ({ history }) => {
             <h2 className="text-center font-weight-bold mb-4">
               Editar Producto
             </h2>
+
+            {alerta && <p className={alerta.clases}>{alerta.msg}</p>}
 
             <form onSubmit={handleSubmit}>
               <div className="form-group">
