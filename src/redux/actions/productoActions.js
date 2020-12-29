@@ -10,6 +10,10 @@ import {
   ELIMINAR_PRODUCTO,
   ELIMINAR_PRODUCTO_EXITO,
   ELIMINAR_PRODUCTO_ERROR,
+  OBTENER_PRODUCTO_EDITAR,
+  EDITAR_PRODUCTO,
+  EDITAR_PRODUCTO_EXITO,
+  EDITAR_PRODUCTO_ERROR,
 } from "../types";
 
 // **********  Agregar producto a la base de datos **********
@@ -109,6 +113,12 @@ export const eliminarProductoAction = (id) => {
     } catch (error) {
       console.log(error);
       dispatch(eliminarProductoError(true));
+
+      Swal.fire({
+        icon: "error",
+        title: "Hubo un error",
+        text: "Hubo un error, intenta de nuevo",
+      });
     }
   };
 };
@@ -124,5 +134,64 @@ const eliminarProductoExito = () => ({
 
 const eliminarProductoError = (estado) => ({
   type: ELIMINAR_PRODUCTO_ERROR,
+  payload: estado,
+});
+
+// **********  Obtener un producto **********
+
+export const obtenerProductoEditarAction = (producto) => {
+  return (dispatch) => {
+    dispatch(obtenerProducto(producto));
+  };
+};
+
+const obtenerProducto = (producto) => ({
+  type: OBTENER_PRODUCTO_EDITAR,
+  payload: producto,
+});
+
+// **********  Editar el producto en la BD y en el state **********
+export const editarProductoAction = (producto) => {
+  return async (dispatch) => {
+    const { id, nombre, precio } = producto;
+
+    dispatch(editarProducto());
+    try {
+      await db
+        .collection("productos")
+        .doc(id)
+        .update({ nombre, precio: Number(precio) });
+      dispatch(editarProductoExito(producto));
+
+      // Mostramos la alerta
+      Swal.fire(
+        "Producto Editado",
+        "El producto se editó correctamente",
+        "success"
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(editarProductoError(true));
+
+      Swal.fire({
+        icon: "error",
+        title: "Hubo un error",
+        text: "Hubo un error, intenta de nuevo",
+      });
+    }
+  };
+};
+
+const editarProducto = () => ({
+  type: EDITAR_PRODUCTO,
+});
+
+const editarProductoExito = (producto) => ({
+  type: EDITAR_PRODUCTO_EXITO,
+  payload: producto,
+});
+
+const editarProductoError = (estado) => ({
+  type: EDITAR_PRODUCTO_ERROR,
   payload: estado,
 });

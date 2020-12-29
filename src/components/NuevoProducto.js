@@ -23,7 +23,7 @@ export const NuevoProducto = ({ history }) => {
     let nPrecio = Number(precio);
 
     // validar formulario
-    if (nombre.trim() === "" || nPrecio <= 0) {
+    if (nombre.trim() === "" || precio.trim() === "") {
       return;
     }
     // si no hay errores
@@ -39,7 +39,7 @@ export const NuevoProducto = ({ history }) => {
     <div className="row justify-content-center">
       <div className="col-md-7">
         <div className="card">
-          <div className="card-body p-md-5">
+          <div className="card-body p-lg-5">
             <h2 className="text-center font-weight-bold mb-4">
               Agregar Producto
             </h2>
